@@ -1,50 +1,37 @@
-# 基于 Pytest + Requests 的接口自动化测试框架
+# 接口自动化测试框架（Pytest + Requests + Allure + MySQL）
 
-## 📖 项目简介
-本项目是一个基于 Python 语言，采用 Pytest 测试框架、Requests 请求库、Allure 报告工具，并接入 MySQL 数据库校验的企业级接口自动化测试框架。被测系统采用 DummyJSON 开源 API 靶场。
+## 这个项目解决什么问题
+针对登录鉴权、购物车增删改查等业务链路，搭建一套可维护的分层接口回归测试框架。
+核心目标：新增用例不改框架代码，失败用例能直接定位是“接口挂了”还是“数据没落库”。
 
-## 🛠️ 技术栈
-- **语言**: Python 3.11
-- **测试框架**: Pytest
-- **请求库**: Requests
-- **数据驱动**: PyYAML
-- **数据库**: PyMySQL
-- **测试报告**: Allure
+## 技术栈与各自角色
+- Python：框架语言
+- Requests：发送 HTTP 请求、管理 Session
+- Pytest：用例组织、Fixture 注入、参数化
+- PyYAML：测试数据与代码解耦
+- Allure：可视化报告，挂载请求/响应附件
+- MySQL：接口执行后的数据库一致性断言
+- Git：版本管理，.gitignore 屏蔽敏感配置
 
-## 📁 目录结构
-```text
-api_auto_test/
-├── apis/            # 接口层（封装请求）
-├── data/            # 数据层（YAML 测试数据）
-├── testcases/       # 用例层（业务断言）
-├── utils/           # 工具类（如数据库连接）
-├── conftest.py      # 全局 Fixture（Session、数据库连接等）
-├── pytest.ini       # Pytest 配置文件
-└── requirements.txt # 依赖清单
-```
+## 分层架构
+apis/       接口封装层（每个业务接口一个方法）
+data/       YAML 测试数据
+testcases/  测试用例层
+utils/      公共工具（数据库连接、断言助手等）
+conftest.py 全局 Fixture：登录 Token 自动注入
+pytest.ini  运行配置
 
-## 🚀 核心特性
-- 数据驱动：测试数据与测试代码分离，采用 YAML 文件管理。
+## 关键设计（面试官会追问的点，先写清楚）
+1. **Token 自动注入**：session 级 fixture 完成登录，其余用例通过 conftest 自动拿到 token，不重复登录。
+2. **数据驱动**：用例逻辑写一次，YAML 里加一组数据就多一条用例；新增业务场景不需要动框架代码。
+3. **接口 + 数据库双端断言**：不仅看响应码，还查询 MySQL 校验落库数据是否一致，覆盖“接口返回成功但数据没写进去”的盲区。
+4. **Allure 附件**：请求体、响应体、断言失败信息挂到报告上，失败用例不需要翻日志就能定位。
 
-- 鉴权自动化：利用 Session 保持登录态，自动注入 Token。
-
-- 数据库联动：支持接口调用后直接查库断言，实现业务闭环。
-
-- 高颜值报告：生成 Allure 可视化测试报告，支持挂载响应报文和数据库结果附件。
-
-## 💻 快速开始
-安装依赖：
-
-- bash
+## 如何运行
 pip install -r requirements.txt
-配置环境：修改 utils/db_utils.py 中的数据库连接信息（账号、密码等）。
-
-
-- 运行测试：
-
-bash
 pytest --alluredir=./allure-results
-- 查看报告：
-
-bash
 allure serve ./allure-results
+
+## 目录截图 / 报告截图
+- Allure 报告截图:![img.png](img.png)
+- 目录结构截图:![img_1.png](img_1.png)

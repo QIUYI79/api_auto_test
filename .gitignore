@@ -9,10 +9,17 @@ __pycache__/
 # Pytest 缓存
 .pytest_cache/
 
-# Allure 产生的数据（不要传，文件太大且每次变）
+# Allure 报告产物
 allure-results/
 allure-report/
 report.html
 
-# 本地数据库文件
+# 本地数据库
 *.db
+
+# IDE配置
+.idea/
+
+# 敏感配置（密码、token，必加！）
+config.ini
+.env
