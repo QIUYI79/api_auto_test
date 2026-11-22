@@ -1,0 +1,5 @@
+create_posts_case:
+    - title: "这是我的第一篇文章"
+      body: "这是第一篇文章的内容"
+    - title:  "这是我的第二篇文章"
+      body: "这是第二篇文章的内容"

@@ -1,0 +1,18 @@
+# 虚拟环境
+.venv/
+venv/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# Pytest 缓存
+.pytest_cache/
+
+# Allure 产生的数据（不要传，文件太大且每次变）
+allure-results/
+allure-report/
+report.html
+
+# 本地数据库文件
+*.db
