@@ -1,60 +1,56 @@
-# 流水线名称，在Actions页面显示
 name: Python Test CI
-# 触发条件：什么时候跑这个流水线
 on:
-  # 向main分支推送代码时触发
   push:
     branches: [ main ]
-  # 向main分支提交PR合并请求时触发
   pull_request:
     branches: [ main ]
 
 jobs:
-  # 任务名称
   test:
-    # 运行环境：Ubuntu最新系统
     runs-on: ubuntu-latest
+    # 权限：必须加上，不然gh-pages推送失败
+    permissions:
+      contents: write
     steps:
-      # 步骤1：拉取仓库代码到虚拟机
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # 步骤2：搭建Python3.11运行环境
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      # 步骤3：安装项目python依赖包
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      # 步骤4：启动MySQL服务，创建测试库和购物车表（包含quantity字段）
       - name: Start MySQL
         run: |
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS test_qa;"
           mysql -uroot -proot -e "USE test_qa; CREATE TABLE IF NOT EXISTS cart_items (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT, quantity INT);"
 
-      # 步骤5：执行pytest自动化用例，输出allure原始结果
-      # || true 作用：就算用例失败，也继续往下生成报告（简历展示友好）
       - name: Run Pytest
         run: |
           pytest -v -s --alluredir=allure-results || true
 
-      # 步骤6：使用allurectl安装Allure工具，自动配置环境变量
-      - name: Set up Allure
-        uses: allure-framework/allurectl@v1
+      # 安装 node，然后用npm安装allure命令行（最稳方案）
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
 
-      # 步骤7：基于原始结果，生成静态html格式的Allure报告
+      - name: Install Allure Commandline
+        run: npm install -g allure-commandline --save-dev
+
       - name: Generate Allure Report
-        run: allurectl generate allure-results --clean -o allure-report
+        run: allure generate allure-results --clean -o allure-report
+        if: always()
 
-      # 步骤8：把生成好的静态报告自动部署到GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
+        if: always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./allure-report
