@@ -1,43 +1,48 @@
-name: API Automation Tests
-
-# 触发条件：当代码 push 到 main 分支，或者发起 PR 时触发
+name: Python Test CI
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   test:
-    # 使用 GitHub 提供的 Ubuntu 最新版虚拟机运行
     runs-on: ubuntu-latest
-
     steps:
-    # 1. 把你的代码拉取到虚拟机上
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    # 2. 安装 Python 3.11 环境
-    - name: Set up Python 3.11
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11'
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
 
-    # 3. 安装项目依赖
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    # 4. 启动 MySQL 服务（因为你的代码需要连数据库）
-    - name: Start MySQL
-      run: |
-        sudo systemctl start mysql.service
-        # 创建我们需要的数据库和表
-        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS test_qa;"
-        mysql -uroot -proot -e "USE test_qa; CREATE TABLE IF NOT EXISTS cart_items (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT, quantity INT);"
+      - name: Start MySQL
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS test_qa;"
+          mysql -uroot -proot -e "USE test_qa; CREATE TABLE IF NOT EXISTS cart_items (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT);"
 
-    # 5. 运行 Pytest 测试
-    - name: Run Pytest
-      run: |
-        pytest -v -s
+      - name: Run Pytest
+        run: |
+          pytest -v -s --alluredir=allure-results
+
+      - name: Install Allure
+        run: |
+          wget https://github.com/allure-framework/allure2/releases/download/2.24.0/allure-2.24.0.zip
+          unzip allure-2.24.0.zip
+          export PATH=$PWD/allure-2.24.0/bin:$PATH
+
+      - name: Generate Allure Report
+        run: allure generate allure-results --clean -o allure-report
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
