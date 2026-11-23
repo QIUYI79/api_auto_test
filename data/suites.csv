@@ -1,0 +1,4 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"","169","验证登录后能成功获取个人详情","testcases","2026-11-23","passed","2026-11-23","TestUser","test_user","",""
+"","707","验证正确账号密码登录成功","testcases","2026-11-23","passed","2026-11-23","TestAuth","test_auth","",""
+"","394","验证加购后，数据库正确落库","testcases","2026-11-23","passed","2026-11-23","TestShoppingFlow","test_business_flow","",""

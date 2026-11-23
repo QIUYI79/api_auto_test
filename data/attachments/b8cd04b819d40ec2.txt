@@ -1,0 +1,5 @@
+INFO     api_auto_test:product_api.py:9 发起获取商品列表请求: URL=https://dummyjson.com/products, 参数: limit=10
+INFO     api_auto_test:product_api.py:14 获取商品列表响应: 状态码=200
+INFO     api_auto_test:product_api.py:33 发起加购物车请求: URL=https://dummyjson.com/carts/add, 请求体={'userId': 1, 'products': [{'id': 1, 'quantity': 2}]}
+INFO     api_auto_test:product_api.py:38 加购物车响应: 状态码=201
+INFO     api_auto_test:test_business_flow.py:43 ✅ 接口与数据库联动校验通过！商品ID: 1, 数量: 2
