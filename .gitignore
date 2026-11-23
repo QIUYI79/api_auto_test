@@ -23,3 +23,5 @@ report.html
 # 敏感配置（密码、token，必加！）
 config.ini
 .env
+
+logs/

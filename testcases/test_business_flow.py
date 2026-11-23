@@ -1,6 +1,6 @@
 import allure
 from apis.product_api import get_products_list, add_to_cart
-
+from utils.logger_utils import logger
 
 # 必须有这个类定义！
 @allure.feature("核心业务流")
@@ -39,4 +39,5 @@ class TestShoppingFlow:  # <--- 确保有这行
         assert len(result) > 0, "数据库里没查到该商品"
         assert result[0][0] == expect_qty, f"库里数量不对: 期望 {expect_qty}, 实际 {result[0][0]}"
 
-        print(f"\n✅ 接口与数据库联动校验通过！商品ID: {product_id}, 数量: {result[0][0]}")
+        # print(f"\n✅ 接口与数据库联动校验通过！...")
+        logger.info(f"✅ 接口与数据库联动校验通过！商品ID: {product_id}, 数量: {result[0][0]}")
