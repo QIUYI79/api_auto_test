@@ -33,5 +33,5 @@ pytest --alluredir=./allure-results
 allure serve ./allure-results
 
 ## 目录截图 / 报告截图
-- Allure 报告截图:![img.png](img.png)
-- 目录结构截图:![img_1.png](img_1.png)
+- Allure 报告截图:![images/img.png](images/img.png)
+- 目录结构截图:![images/img_1.png](images/img_1.png)
