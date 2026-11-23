@@ -1,0 +1,43 @@
+name: API Automation Tests
+
+# 触发条件：当代码 push 到 main 分支，或者发起 PR 时触发
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    # 使用 GitHub 提供的 Ubuntu 最新版虚拟机运行
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. 把你的代码拉取到虚拟机上
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. 安装 Python 3.11 环境
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    # 3. 安装项目依赖
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    # 4. 启动 MySQL 服务（因为你的代码需要连数据库）
+    - name: Start MySQL
+      run: |
+        sudo systemctl start mysql.service
+        # 创建我们需要的数据库和表
+        mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS test_qa;"
+        mysql -uroot -proot -e "USE test_qa; CREATE TABLE IF NOT EXISTS cart_items (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT, quantity INT);"
+
+    # 5. 运行 Pytest 测试
+    - name: Run Pytest
+      run: |
+        pytest -v -s
