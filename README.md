@@ -1,4 +1,6 @@
 # 接口自动化测试框架（Pytest + Requests + Allure + MySQL）
+![GitHub Actions CI](https://github.com/QIUYI79/api_auto_test/actions/workflows/python-test.yml/badge.svg)
+
 
 ## 这个项目解决什么问题
 针对登录鉴权、购物车增删改查等业务链路，搭建一套可维护的分层接口回归测试框架。
@@ -28,9 +30,13 @@ pytest.ini  运行配置
 4. **Allure 附件**：请求体、响应体、断言失败信息挂到报告上，失败用例不需要翻日志就能定位。
 
 ## 如何运行
+
 pip install -r requirements.txt
 pytest --alluredir=./allure-results
 allure serve ./allure-results
+
+## 📊 在线报告地址
+[在线 Allure 测试报告](https://QIuyi79.github.io/api_auto_test/)
 
 ## 目录截图 / 报告截图
 - Allure 报告截图:![images/img.png](images/img.png)
