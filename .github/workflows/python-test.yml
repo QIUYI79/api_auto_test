@@ -26,7 +26,7 @@ jobs:
         run: |
           sudo systemctl start mysql.service
           mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS test_qa;"
-          mysql -uroot -proot -e "USE test_qa; CREATE TABLE IF NOT EXISTS cart_items (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT);"
+          mysql -uroot -proot -e "USE test_qa; CREATE TABLE IF NOT EXISTS cart_items (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT, quantity INT);"
 
       - name: Run Pytest
         run: |
